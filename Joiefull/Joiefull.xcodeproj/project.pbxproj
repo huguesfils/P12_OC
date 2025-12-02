@@ -6,10 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		652B46FD2EDF3C8600972F0A /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 652B46FC2EDF3C8600972F0A /* Launch Screen.storyboard */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXContainerItemProxy section */
 		652B46DC2EDF01AF00972F0A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -31,7 +27,6 @@
 		652B46CE2EDF01AD00972F0A /* Joiefull.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Joiefull.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		652B46DB2EDF01AF00972F0A /* JoiefullTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JoiefullTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		652B46E52EDF01AF00972F0A /* JoiefullUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JoiefullUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		652B46FC2EDF3C8600972F0A /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -93,7 +88,6 @@
 		652B46C52EDF01AD00972F0A = {
 			isa = PBXGroup;
 			children = (
-				652B46FC2EDF3C8600972F0A /* Launch Screen.storyboard */,
 				652B46D02EDF01AD00972F0A /* Joiefull */,
 				652B46DE2EDF01AF00972F0A /* JoiefullTests */,
 				652B46E82EDF01AF00972F0A /* JoiefullUITests */,
@@ -231,7 +225,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				652B46FD2EDF3C8600972F0A /* Launch Screen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
