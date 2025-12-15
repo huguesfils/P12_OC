@@ -1,33 +1,32 @@
-//
-//  InfoItemView.swift
-//  Joiefull
-//
-//  Created by Hugues Fils Caparos on 15/12/2025.
-//
-
 import SwiftUI
 
 struct InfoItemView: View {
+    var label: String
+    var price: String
+    var rating: String
+    var oldPrice: String
+    
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 8) {
-                Text("Veste urbaine")
+                Text(label)
                     .foregroundStyle(Color.black)
                     .fontWeight(.semibold)
-                Text("89€")
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                Text("\(price) €")
                     .foregroundStyle(Color.black)
             }
             Spacer()
             VStack(alignment: .trailing, spacing: 8) {
-                Label {
-                    Text("4.1")
-                        .foregroundStyle(Color.black)
-                } icon: {
+                HStack(spacing: 4) {
                     Image(systemName: "star.fill")
                         .foregroundStyle(Color.orange)
+                    Text(rating)
+                        .foregroundStyle(Color.black)
                 }
-                
-                Text("120€")
+               
+                Text("\(oldPrice) €")
                     .strikethrough()
                     .foregroundStyle(Color.black)
                     .opacity(0.7)
@@ -37,6 +36,6 @@ struct InfoItemView: View {
 }
 
 #Preview {
-    InfoItemView()
+    InfoItemView(label: "Veste urbaine", price: "89", rating: "4.2", oldPrice: "120")
         .padding()
 }
