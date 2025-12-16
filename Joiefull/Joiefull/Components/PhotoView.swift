@@ -1,16 +1,15 @@
 import SwiftUI
 
 struct PhotoView: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    
     let imageName: String
     @State private var isLiked: Bool = false
     @State private var likeCount: Int
     
-    private var imageWidth: CGFloat {
-        UIDevice.current.userInterfaceIdiom == .pad ? 200 : 200
-    }
     
     private var imageHeight: CGFloat {
-        UIDevice.current.userInterfaceIdiom == .pad ? 250 : 200
+        horizontalSizeClass == .compact ? 200 : 250
     }
     
     init(imageName: String = "", initialLikeCount: Int = 0) {
@@ -22,7 +21,7 @@ struct PhotoView: View {
         Image(imageName)
             .resizable()
             .aspectRatio(contentMode: .fill)
-            .frame(width: imageWidth, height: imageHeight)
+            .frame(maxWidth: 200, maxHeight: imageHeight)
             .clipped()
             .cornerRadius(20)
             .overlay(alignment: .bottomTrailing) {
