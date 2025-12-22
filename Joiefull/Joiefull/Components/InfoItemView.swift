@@ -2,40 +2,48 @@ import SwiftUI
 
 struct InfoItemView: View {
     var label: String
-    var price: String
-    var rating: String
-    var oldPrice: String
+    var price: Double
+    var originalPrice: Double
+    
+    private var hasDiscount: Bool {
+        originalPrice > price
+    }
     
     var body: some View {
-        HStack {
+        HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 8) {
                 Text(label)
                     .foregroundStyle(Color.black)
                     .fontWeight(.semibold)
                     .lineLimit(1)
                     .truncationMode(.tail)
-                Text("\(price) €")
+                Text(String(format: "%.2f €", price))
                     .foregroundStyle(Color.black)
             }
+            
             Spacer()
+            
             VStack(alignment: .trailing, spacing: 8) {
                 HStack(spacing: 4) {
                     Image(systemName: "star.fill")
                         .foregroundStyle(Color.orange)
-                    Text(rating)
+                    Text("4.2")
                         .foregroundStyle(Color.black)
                 }
                
-                Text("\(oldPrice) €")
-                    .strikethrough()
-                    .foregroundStyle(Color.black)
-                    .opacity(0.7)
+                if hasDiscount {
+                    Text(String(format: "%.2f €", originalPrice))
+                        .strikethrough()
+                        .foregroundStyle(Color.black)
+                        .opacity(0.7)
+                }
             }
         }
+        .font(Font.system(size: 14))
     }
 }
 
 #Preview {
-    InfoItemView(label: "Veste urbaine", price: "89", rating: "4.2", oldPrice: "120")
+    InfoItemView(label: "Veste urbaine", price: 89.99, originalPrice: 120.0)
         .padding()
 }

@@ -1,28 +1,56 @@
 import SwiftUI
 
 struct HomeView: View {
-    let items: [ItemData] = [
-        ItemData(imageName: "TestPreview", label: "Veste urbaine", price: "89", rating: "4.3", oldPrice: "120", initialLikeCount: 24),
-        ItemData(imageName: "TestPreview", label: "Pull torsadé", price: "69", rating: "4.6", oldPrice: "95", initialLikeCount: 56),
-        ItemData(imageName: "TestPreview", label: "Pantalon slim", price: "79", rating: "4.1", oldPrice: "110", initialLikeCount: 12),
-        ItemData(imageName: "TestPreview", label: "Chemise élégante", price: "59", rating: "4.5", oldPrice: "85", initialLikeCount: 33)
-    ]
+    @State private var viewModel = HomeViewModel()
     
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 16) {
-                ForEach(items) { item in
-                    ItemCardView(
-                        imageName: item.imageName,
-                        label: item.label,
-                        price: item.price,
-                        rating: item.rating,
-                        oldPrice: item.oldPrice,
-                        initialLikeCount: item.initialLikeCount
-                    )
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 24) {
+                if viewModel.isLoading {
+                    ProgressView()
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                } else if let errorMessage = viewModel.errorMessage {
+                    VStack(spacing: 16) {
+                        Text("Erreur")
+                            .font(.headline)
+                        Text(errorMessage)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        Button("Réessayer") {
+                            Task {
+                                await viewModel.loadClothes()
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                } else {
+                    ForEach(viewModel.sortedCategories, id: \.self) { category in
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text(category)
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .padding(.horizontal)
+                                .textInputAutocapitalization(.words)
+                            
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 16) {
+                                    ForEach(viewModel.itemsByCategory[category] ?? []) { item in
+                                        ItemCardView(item: item)
+                                    }
+                                }
+                                .padding(.horizontal)
+                            }
+                        }
+                    }
                 }
             }
-            .padding(.horizontal)
+            .padding(.vertical)
+        }
+        .task {
+            await viewModel.loadClothes()
         }
     }
 }
