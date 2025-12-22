@@ -7,4 +7,3 @@ enum ClothesAPI {
         "\(baseURL)/clothes.json"
     }
 }
-

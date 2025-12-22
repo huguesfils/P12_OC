@@ -5,15 +5,14 @@ import FactoryKit
 @MainActor
 @Observable
 public class HomeViewModel {
+    private let service: ClothesServiceProtocol
     
     var items: [Item] = []
     var isLoading = false
     var errorMessage: String?
     
-    private let clothesService: ClothesServiceProtocol
-    
-    init(clothesService: ClothesServiceProtocol? = nil) {
-        self.clothesService = clothesService ?? Container.shared.clothesService()
+    init(service: ClothesServiceProtocol = Container.shared.clothesService()) {
+        self.service = service
     }
     
     func loadClothes() async {
@@ -21,7 +20,7 @@ public class HomeViewModel {
         errorMessage = nil
         
         do {
-            items = try await clothesService.fetchClothes()
+            items = try await service.fetchClothes()
         } catch {
             errorMessage = error.localizedDescription
             print("Erreur lors du chargement des vêtements: \(error)")

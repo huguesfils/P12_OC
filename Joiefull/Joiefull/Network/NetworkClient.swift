@@ -1,13 +1,13 @@
 import Foundation
 
-protocol NetworkClientProtocol {
+protocol NetworkClientProtocol: Sendable {
     func request<T: Decodable>(_ endpoint: String) async throws -> T
 }
 
 final class NetworkClient: NetworkClientProtocol {
     private let session: URLSession
     
-    init(session: URLSession = .shared) {
+    nonisolated init(session: URLSession = .shared) {
         self.session = session
     }
     
@@ -40,4 +40,3 @@ final class NetworkClient: NetworkClientProtocol {
         }
     }
 }
-
