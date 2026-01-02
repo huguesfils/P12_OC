@@ -55,17 +55,17 @@ struct PhotoView: View {
         .clipped()
         .cornerRadius(20)
         .overlay(alignment: .bottomTrailing) {
-            HStack(spacing: 6) {
+            HStack(spacing: 4) {
                 Image(systemName: isLiked ? "heart.fill" : "heart")
                     .foregroundColor(isLiked ? .red : .black)
-                    .font(.system(size: 16))
+                    .font(.system(size: 14))
                 
                 Text("\(likeCount)")
                     .foregroundColor(.black)
                     .font(.system(size: 14, weight: .medium))
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
             .background(
                 Capsule()
                     .fill(Color.white)

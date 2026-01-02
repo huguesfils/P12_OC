@@ -1,10 +1,3 @@
-//
-//  JoiefullApp.swift
-//  Joiefull
-//
-//  Created by Hugues Fils Caparos on 02/12/2025.
-//
-
 import SwiftUI
 
 @main

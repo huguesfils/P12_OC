@@ -1,10 +1,3 @@
-//
-//  JoiefullTests.swift
-//  JoiefullTests
-//
-//  Created by Hugues Fils Caparos on 02/12/2025.
-//
-
 import Testing
 @testable import Joiefull
 

@@ -1,10 +1,3 @@
-//
-//  JoiefullUITestsLaunchTests.swift
-//  JoiefullUITests
-//
-//  Created by Hugues Fils Caparos on 02/12/2025.
-//
-
 import XCTest
 
 final class JoiefullUITestsLaunchTests: XCTestCase {

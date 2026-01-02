@@ -29,11 +29,10 @@ struct HomeView: View {
                 } else {
                     ForEach(viewModel.sortedCategories, id: \.self) { category in
                         VStack(alignment: .leading, spacing: 16) {
-                            Text(category)
+                            Text(viewModel.formattedCategory(category))
                                 .font(.title)
                                 .fontWeight(.bold)
                                 .padding(.horizontal)
-                                .textInputAutocapitalization(.words)
                             
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 16) {

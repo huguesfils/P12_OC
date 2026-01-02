@@ -36,4 +36,8 @@ public class HomeViewModel {
     var sortedCategories: [String] {
         itemsByCategory.keys.sorted()
     }
+    
+    func formattedCategory(_ category: String) -> String {
+        category.capitalized
+    }
 }
