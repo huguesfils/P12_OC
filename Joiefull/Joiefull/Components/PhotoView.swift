@@ -27,15 +27,24 @@ struct PhotoView: View {
                     case .empty:
                         ProgressView()
                             .frame(maxWidth: 200, maxHeight: imageHeight)
+                            .onAppear {
+                                print("📥 [PhotoView] Début téléchargement: \(url.absoluteString)")
+                            }
                     case .success(let image):
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                    case .failure:
+                            .onAppear {
+                                print("✅ [PhotoView] Image chargée: \(url.absoluteString)")
+                            }
+                    case .failure(let error):
                         Image(systemName: "photo")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .foregroundColor(.gray)
+                            .onAppear {
+                                print("❌ [PhotoView] Erreur chargement: \(url.absoluteString) - \(error)")
+                            }
                     @unknown default:
                         EmptyView()
                     }
