@@ -2,8 +2,34 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var viewModel = HomeViewModel()
+    @State private var selectedItem: Item?
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
+    @ViewBuilder
     var body: some View {
+        Group {
+            if horizontalSizeClass == .regular {
+                NavigationSplitView {
+                    listContent
+                } detail: {
+                    DetailView(item: selectedItem)
+                }
+            } else {
+                NavigationStack {
+                    listContent
+                        .navigationDestination(for: Item.self) { item in
+                            DetailView(item: item)
+                        }
+                }
+            }
+        }
+        .task {
+            await viewModel.loadClothes()
+        }
+    }
+    
+    @ViewBuilder
+    private var listContent: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .leading, spacing: 24) {
                 if viewModel.isLoading {
@@ -37,7 +63,18 @@ struct HomeView: View {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 16) {
                                     ForEach(viewModel.itemsByCategory[category] ?? []) { item in
-                                        ItemCardView(item: item)
+                                        if horizontalSizeClass == .regular {
+                                            Button {
+                                                selectedItem = item
+                                            } label: {
+                                                ItemCardView(item: item)
+                                            }
+                                            .buttonStyle(.plain)
+                                        } else {
+                                            NavigationLink(value: item) {
+                                                ItemCardView(item: item)
+                                            }
+                                        }
                                     }
                                 }
                                 .padding(.horizontal)
@@ -47,9 +84,6 @@ struct HomeView: View {
                 }
             }
             .padding(.vertical)
-        }
-        .task {
-            await viewModel.loadClothes()
         }
     }
 }
