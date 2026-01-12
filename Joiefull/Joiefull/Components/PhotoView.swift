@@ -1,24 +1,32 @@
 import SwiftUI
 
 struct PhotoView: View {
+    // MARK: Properties
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
     let imageURL: String?
     let imageName: String?
-    @State private var isLiked: Bool = false
-    @State private var likeCount: Int
-    
+    let customHeight: CGFloat?
+    let customMaxWidth: CGFloat?
+    let initialLikeCount: Int
     
     private var imageHeight: CGFloat {
-        horizontalSizeClass == .compact ? 200 : 250
+        customHeight ?? (horizontalSizeClass == .compact ? 200 : 250)
     }
     
-    init(imageURL: String? = nil, imageName: String? = nil, initialLikeCount: Int = 0) {
+    private var maxWidth: CGFloat {
+        customMaxWidth ?? 200
+    }
+    
+    init(imageURL: String? = nil, imageName: String? = nil, initialLikeCount: Int = 0, customHeight: CGFloat? = nil, customMaxWidth: CGFloat? = nil) {
         self.imageURL = imageURL
         self.imageName = imageName
-        _likeCount = State(initialValue: initialLikeCount)
+        self.initialLikeCount = initialLikeCount
+        self.customHeight = customHeight
+        self.customMaxWidth = customMaxWidth
     }
     
+    // MARK: Body
     var body: some View {
         Group {
             if let imageURL = imageURL, let url = URL(string: imageURL) {
@@ -35,46 +43,13 @@ struct PhotoView: View {
                     .foregroundColor(.gray)
             }
         }
-        .frame(maxWidth: 200, maxHeight: imageHeight)
+        .frame(maxWidth: maxWidth, maxHeight: imageHeight)
         .clipped()
         .cornerRadius(20)
         .overlay(alignment: .bottomTrailing) {
-            HStack(spacing: 4) {
-                Image(systemName: isLiked ? "heart.fill" : "heart")
-                    .foregroundColor(isLiked ? .red : .black)
-                    .font(.system(size: 14))
-                
-                Text("\(likeCount)")
-                    .foregroundColor(.black)
-                    .font(.system(size: 14, weight: .medium))
-            }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(
-                Capsule()
-                    .fill(Color.white)
-                    .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
-            )
-            .onTapGesture {
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                    isLiked.toggle()
-                    if isLiked {
-                        likeCount += 1
-                    } else {
-                        likeCount = max(0, likeCount - 1)
-                    }
-                }
-            }
-            .padding(.trailing, 12)
-            .padding(.bottom, 12)
+            LikeBadgeView(initialLikeCount: initialLikeCount)
+                .padding(.trailing, 12)
+                .padding(.bottom, 12)
         }
     }
-}
-
-#Preview {
-    VStack(spacing: 20) {
-        PhotoView(imageName: "TestPreview", initialLikeCount: 24)
-        PhotoView(imageName: "TestPreview", initialLikeCount: 56)
-    }
-    .padding()
 }
