@@ -12,7 +12,12 @@ struct Item: Identifiable, Codable, Hashable {
     let category: String
     let likes: Int
     let price: Double
-    let original_price: Double
+    let originalPrice: Double
+    
+    enum CodingKeys: String, CodingKey {
+        case id, picture, name, category, likes, price
+        case originalPrice = "original_price"
+    }
 }
 
 
