@@ -1,10 +1,3 @@
-//
-//  DetailView.swift
-//  Joiefull
-//
-//  Created by Hugues Fils Caparos on 06/01/2026.
-//
-
 import SwiftUI
 
 struct DetailView: View {
@@ -14,38 +7,41 @@ struct DetailView: View {
         if let item = item {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    // Image principale
-                    AsyncImage(url: URL(string: item.picture.url)) { phase in
-                        switch phase {
-                        case .empty:
-                            ProgressView()
-                                .frame(height: 400)
-                                .onAppear {
-                                    print("📥 [DetailView] Début téléchargement: \(item.picture.url)")
-                                }
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 400)
-                                .clipped()
-                                .onAppear {
-                                    print("✅ [DetailView] Image chargée: \(item.picture.url)")
-                                }
-                        case .failure(let error):
-                            Image(systemName: "photo")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(height: 400)
-                                .foregroundColor(.gray)
-                                .onAppear {
-                                    print("❌ [DetailView] Erreur chargement: \(item.picture.url) - \(error)")
-                                }
-                        @unknown default:
-                            EmptyView()
-                        }
-                    }
+                    //                    AsyncImage(url: URL(string: item.picture.url)) { phase in
+                    //                        switch phase {
+                    //                        case .empty:
+                    //                            ProgressView()
+                    //                                .frame(height: 400)
+                    //                                .onAppear {
+                    //                                    print("📥 [DetailView] Début téléchargement: \(item.picture.url)")
+                    //                                }
+                    //                        case .success(let image):
+                    //                            image
+                    //                                .resizable()
+                    //                                .aspectRatio(contentMode: .fill)
+                    //                                .frame(maxWidth: .infinity)
+                    //                                .frame(height: 400)
+                    //                                .clipped()
+                    //                                .onAppear {
+                    //                                    print("✅ [DetailView] Image chargée: \(item.picture.url)")
+                    //                                }
+                    //                        case .failure(let error):
+                    //                            Image(systemName: "photo")
+                    //                                .resizable()
+                    //                                .aspectRatio(contentMode: .fit)
+                    //                                .frame(height: 400)
+                    //                                .foregroundColor(.gray)
+                    //                                .onAppear {
+                    //                                    print("❌ [DetailView] Erreur chargement: \(item.picture.url) - \(error)")
+                    //                                }
+                    //                        @unknown default:
+                    //                            EmptyView()
+                    //                        }
+                    //                    }
+                    CachedAsyncImage(url: URL(string: item.picture.url))
+                        .clipped()
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 400)
                     
                     VStack(alignment: .leading, spacing: 16) {
                         Text(item.name)
