@@ -22,33 +22,8 @@ struct PhotoView: View {
     var body: some View {
         Group {
             if let imageURL = imageURL, let url = URL(string: imageURL) {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .empty:
-                        ProgressView()
-                            .frame(maxWidth: 200, maxHeight: imageHeight)
-                            .onAppear {
-                                print("📥 [PhotoView] Début téléchargement: \(url.absoluteString)")
-                            }
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .onAppear {
-                                print("✅ [PhotoView] Image chargée: \(url.absoluteString)")
-                            }
-                    case .failure(let error):
-                        Image(systemName: "photo")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .foregroundColor(.gray)
-                            .onAppear {
-                                print("❌ [PhotoView] Erreur chargement: \(url.absoluteString) - \(error)")
-                            }
-                    @unknown default:
-                        EmptyView()
-                    }
-                }
+                CachedAsyncImage(url: url)
+                    .clipped()
             } else if let imageName = imageName {
                 Image(imageName)
                     .resizable()
