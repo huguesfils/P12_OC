@@ -1,95 +1,77 @@
 import SwiftUI
 
 struct DetailView: View {
+    // MARK: Properties
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @State private var userRating: Int = 0
+    @State private var userComment: String = ""
     let item: Item?
     
+    private var photoMaxHeight: CGFloat {
+        horizontalSizeClass == .regular ? 600 : 400
+    }
+    
+    // MARK: Body
+    @ViewBuilder
     var body: some View {
         if let item = item {
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    //                    AsyncImage(url: URL(string: item.picture.url)) { phase in
-                    //                        switch phase {
-                    //                        case .empty:
-                    //                            ProgressView()
-                    //                                .frame(height: 400)
-                    //                                .onAppear {
-                    //                                    print("📥 [DetailView] Début téléchargement: \(item.picture.url)")
-                    //                                }
-                    //                        case .success(let image):
-                    //                            image
-                    //                                .resizable()
-                    //                                .aspectRatio(contentMode: .fill)
-                    //                                .frame(maxWidth: .infinity)
-                    //                                .frame(height: 400)
-                    //                                .clipped()
-                    //                                .onAppear {
-                    //                                    print("✅ [DetailView] Image chargée: \(item.picture.url)")
-                    //                                }
-                    //                        case .failure(let error):
-                    //                            Image(systemName: "photo")
-                    //                                .resizable()
-                    //                                .aspectRatio(contentMode: .fit)
-                    //                                .frame(height: 400)
-                    //                                .foregroundColor(.gray)
-                    //                                .onAppear {
-                    //                                    print("❌ [DetailView] Erreur chargement: \(item.picture.url) - \(error)")
-                    //                                }
-                    //                        @unknown default:
-                    //                            EmptyView()
-                    //                        }
-                    //                    }
-                    CachedAsyncImage(url: URL(string: item.picture.url))
-                        .clipped()
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 400)
+                VStack(alignment: .leading, spacing: 16) {
+                    PhotoView(
+                        imageURL: item.picture.url,
+                        initialLikeCount: item.likes,
+                        customHeight: photoMaxHeight,
+                        customMaxWidth: .infinity
+                    )
                     
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text(item.name)
-                            .font(.title)
-                            .fontWeight(.bold)
+                    InfoItemView(
+                        label: item.name,
+                        price: item.price,
+                        originalPrice: item.originalPrice,
+                        style: .regular
+                    )
+                    
+                    Text(item.picture.description)
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                        .lineSpacing(4)
+                    
+                    HStack(spacing: 12) {
+                        Image(systemName: "person.circle.fill")
+                            .resizable()
+                            .frame(width: 40, height: 40)
+                            .foregroundColor(.gray.opacity(0.5))
                         
-                        Text(item.category)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                        
-                        HStack(alignment: .center, spacing: 12) {
-                            Text("\(String(format: "%.2f", item.price))€")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .foregroundColor(.primary)
-                            
-                            if item.original_price > item.price {
-                                Text("\(String(format: "%.2f", item.original_price))€")
-                                    .font(.body)
-                                    .foregroundColor(.secondary)
-                                    .strikethrough()
+                        HStack(spacing: 8) {
+                            ForEach(1...5, id: \.self) { star in
+                                Button(action: {
+                                    userRating = star
+                                }) {
+                                    Image(systemName: star <= userRating ? "star.fill" : "star")
+                                        .font(.system(size: 28))
+                                        .foregroundColor(star <= userRating ? .orange : .gray.opacity(0.4))
+                                }
                             }
                         }
-                        
-                        HStack {
-                            Image(systemName: "heart.fill")
-                                .foregroundColor(.red)
-                            Text("\(item.likes) personnes aiment ce produit")
-                                .font(.callout)
-                                .foregroundColor(.secondary)
-                        }
-                        
-                        Divider()
-                            .padding(.vertical, 8)
-                        
-                        Text("Description")
-                            .font(.headline)
-                        Text(item.picture.description)
-                            .font(.body)
-                            .foregroundColor(.secondary)
-                        
-                        Spacer()
                     }
-                    .padding()
+                    
+                    TextField("Partagez ici vos impressions sur cette pièce", text: $userComment, axis: .vertical)
+                        .lineLimit(5...10)
+                        .padding(12)
+                        .background(Color(.systemGray6))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    
+                    Spacer()
+                }
+                .padding()
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {}) {
+                        Image(systemName: "square.and.arrow.up")
+                    }
                 }
             }
-            .navigationTitle(item.name)
-            .navigationBarTitleDisplayMode(.inline)
         } else {
             VStack(spacing: 20) {
                 Image(systemName: "hand.tap")
@@ -100,24 +82,5 @@ struct DetailView: View {
                     .foregroundColor(.secondary)
             }
         }
-    }
-}
-
-#Preview {
-    let sampleItem = Item(
-        id: 0,
-        picture: Picture(
-            url: "",
-            description: "Sac à main orange posé sur une poignée de porte"
-        ),
-        name: "Sac à main orange",
-        category: "ACCESSORIES",
-        likes: 56,
-        price: 69.99,
-        original_price: 89.99
-    )
-    
-    NavigationStack {
-        DetailView(item: sampleItem)
     }
 }

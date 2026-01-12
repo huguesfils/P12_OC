@@ -2,11 +2,12 @@ import SwiftUI
 
 struct CachedAsyncImage: View {
     //MARK: Properties
-    let url: URL?
     @State private var uiImage: UIImage?
     @State private var isLoading: Bool = true
     
-    //MARK: Body
+    let url: URL?
+    
+    // MARK: Body
     @ViewBuilder
     var body: some View {
         Group {
@@ -27,35 +28,43 @@ struct CachedAsyncImage: View {
         }
     }
     
-    //MARK: Private methods
+    // MARK: Private methods
     private func loadImage() async {
         guard let url else {
             isLoading = false
             return
         }
+    
+        guard !Task.isCancelled else { return }
         
         if let cached = ImageCache.shared.getImage(for: url) {
-            print("[Cache] Image trouvée: \(url.lastPathComponent)")
             uiImage = cached
             isLoading = false
             return
         }
         
-        print("[Download] Téléchargement: \(url.lastPathComponent)")
+        guard !Task.isCancelled else { return }
         
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
+            
+            guard !Task.isCancelled else { return }
+            
             guard let image = UIImage(data: data) else {
                 isLoading = false
                 return
             }
             
             ImageCache.shared.setImage(image, for: url)
-            print("[Cache] Image stockée: \(url.lastPathComponent)")
+            
+            guard !Task.isCancelled else { return }
             
             uiImage = image
+        } catch is CancellationError {
+            return
         } catch {
-            print("[Error] \(error.localizedDescription)")
+            print("Error loading image: \(error)") // enum d'erreur 
+            isLoading = false
         }
         
         isLoading = false
