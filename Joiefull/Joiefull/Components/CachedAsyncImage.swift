@@ -63,7 +63,7 @@ struct CachedAsyncImage: View {
         } catch is CancellationError {
             return
         } catch {
-            print("Error loading image: \(error)") // enum d'erreur 
+            print("Error loading image: \(error)") // enum d'erreur
             isLoading = false
         }
         
