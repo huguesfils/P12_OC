@@ -40,7 +40,7 @@ struct PhotoView: View {
                 Image(systemName: "photo")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.secondary)
             }
         }
         .frame(maxWidth: maxWidth, maxHeight: imageHeight)

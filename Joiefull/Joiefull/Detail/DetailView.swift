@@ -33,14 +33,14 @@ struct DetailView: View {
                     
                     Text(item.picture.description)
                         .font(.body)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                         .lineSpacing(4)
                     
                     HStack(spacing: 12) {
                         Image(systemName: "person.circle.fill")
                             .resizable()
                             .frame(width: 40, height: 40)
-                            .foregroundColor(.gray.opacity(0.5))
+                            .foregroundStyle(.secondary)
                         
                         HStack(spacing: 8) {
                             ForEach(1...5, id: \.self) { star in
@@ -49,7 +49,7 @@ struct DetailView: View {
                                 }) {
                                     Image(systemName: star <= userRating ? "star.fill" : "star")
                                         .font(.system(size: 28))
-                                        .foregroundColor(star <= userRating ? .orange : .gray.opacity(0.4))
+                                        .foregroundStyle(star <= userRating ? .orange : .secondary)
                                 }
                             }
                         }
@@ -58,7 +58,7 @@ struct DetailView: View {
                     TextField("Partagez ici vos impressions sur cette pièce", text: $userComment, axis: .vertical)
                         .lineLimit(5...10)
                         .padding(12)
-                        .background(Color(.systemGray6))
+                        .background(Color(uiColor: .systemGray6))
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                     
                     Spacer()
@@ -76,10 +76,10 @@ struct DetailView: View {
             VStack(spacing: 20) {
                 Image(systemName: "hand.tap")
                     .font(.system(size: 80))
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
                 Text("Sélectionnez un article")
                     .font(.title2)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
             }
         }
     }

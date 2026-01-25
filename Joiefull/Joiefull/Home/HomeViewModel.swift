@@ -9,6 +9,7 @@ public class HomeViewModel {
     var items: [Item] = []
     var isLoading = false
     var errorMessage: String?
+    var searchText: String = ""
     
     init(service: ClothesServiceProtocol = Container.shared.clothesService()) {
         self.service = service
@@ -38,5 +39,34 @@ public class HomeViewModel {
     
     func formattedCategory(_ category: String) -> String {
         category.capitalized
+    }
+    
+    var filteredCategories: [String] {
+        if searchText.isEmpty {
+            return sortedCategories
+        } else {
+            return sortedCategories.filter { category in
+                let items = itemsByCategory[category] ?? []
+                return items.contains { item in
+                    matchesSearchText(item)
+                }
+            }
+        }
+    }
+    
+    func filteredItems(for category: String) -> [Item] {
+        let items = itemsByCategory[category] ?? []
+        if searchText.isEmpty {
+            return items
+        } else {
+            return items.filter { matchesSearchText($0) }
+        }
+    }
+    
+    func matchesSearchText(_ item: Item) -> Bool {
+        let searchLower = searchText.lowercased()
+        return item.name.lowercased().contains(searchLower) ||
+        item.picture.description.lowercased().contains(searchLower) == true ||
+        item.category.lowercased().contains(searchLower)
     }
 }

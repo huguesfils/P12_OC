@@ -56,13 +56,13 @@ struct InfoItemView: View {
                 Text(label)
                     .font(style.titleFont)
                     .fontWeight(.semibold)
-                    .foregroundStyle(Color.black)
+                    .foregroundStyle(.primary)
                     .lineLimit(1)
                     .truncationMode(.tail)
                 
                 Text(String(format: "%.0f€", price))
                     .font(style.priceFont)
-                    .foregroundStyle(Color.black)
+                    .foregroundStyle(.primary)
             }
             
             Spacer()
@@ -70,19 +70,19 @@ struct InfoItemView: View {
             VStack(alignment: .trailing, spacing: style.spacing) {
                 HStack(spacing: 4) {
                     Image(systemName: "star.fill")
-                        .foregroundStyle(Color.orange)
+                        .foregroundStyle(.orange)
                         .font(style.ratingFont)
                     Text("4.6")
                         .font(style.ratingFont)
                         .fontWeight(.medium)
-                        .foregroundStyle(Color.black)
+                        .foregroundStyle(.primary)
                 }
                
                 if hasDiscount {
                     Text(String(format: "%.0f€", originalPrice))
                         .font(style.priceFont)
                         .strikethrough()
-                        .foregroundStyle(Color.secondary)
+                        .foregroundStyle(.secondary)
                 }
             }
         }
