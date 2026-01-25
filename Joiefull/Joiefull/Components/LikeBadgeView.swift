@@ -2,21 +2,24 @@ import SwiftUI
 
 struct LikeBadgeView: View {
     // MARK: Properties
-    @State private var isLiked: Bool = false
-    @State private var likeCount: Int
+    let itemId: Int
+    let isFavorite: Bool
+    let initialLikeCount: Int
+    let onToggle: (Int) -> Void
     
-    init(initialLikeCount: Int = 0) {
-        _likeCount = State(initialValue: initialLikeCount)
+    private var displayCount: Int {
+        initialLikeCount + (isFavorite ? 1 : 0)
     }
     
     // MARK: Body
+    @ViewBuilder
     var body: some View {
         HStack(spacing: 4) {
-            Image(systemName: isLiked ? "heart.fill" : "heart")
-                .foregroundStyle(isLiked ? .red : .primary)
+            Image(systemName: isFavorite ? "heart.fill" : "heart")
+                .foregroundStyle(isFavorite ? .red : .primary)
                 .font(.system(size: 14))
-            
-            Text("\(likeCount)")
+
+            Text("\(displayCount)")
                 .foregroundStyle(.primary)
                 .font(.system(size: 14, weight: .medium))
         }
@@ -29,9 +32,7 @@ struct LikeBadgeView: View {
         )
         .onTapGesture {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                isLiked.toggle()
-                likeCount += isLiked ? 1 : -1
-                likeCount = max(0, likeCount)
+                onToggle(itemId)
             }
         }
     }

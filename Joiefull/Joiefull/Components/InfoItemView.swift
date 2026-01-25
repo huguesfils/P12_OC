@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct InfoItemView: View {
+    // MARK: Enum
     enum Style {
         case compact
         case regular
@@ -34,10 +35,15 @@ struct InfoItemView: View {
         }
     }
     
+    // MARK: Properties
     var label: String
     var price: Double
     var originalPrice: Double
     var style: Style
+    
+    private var hasDiscount: Bool {
+        originalPrice > price
+    }
     
     init(label: String, price: Double, originalPrice: Double, style: Style = .compact) {
         self.label = label
@@ -46,10 +52,8 @@ struct InfoItemView: View {
         self.style = style
     }
     
-    private var hasDiscount: Bool {
-        originalPrice > price
-    }
-    
+    // MARK: Body
+    @ViewBuilder
     var body: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: style.spacing) {

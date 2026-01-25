@@ -1,11 +1,19 @@
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass
-    
+    // MARK: Properties
     @State private var viewModel = HomeViewModel()
     @State private var selectedItem: Item?
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.modelContext) private var modelContext
+    @Query private var allUserData: [UserItemData]
     
+    private var favoriteIds: Set<Int> {
+        Set(allUserData.filter { $0.isFavorite }.map { $0.itemId })
+    }
+    
+    // MARK: Body
     @ViewBuilder
     var body: some View {
         Group {
@@ -13,14 +21,14 @@ struct HomeView: View {
                 NavigationSplitView {
                     listContent
                 } detail: {
-                    DetailView(item: selectedItem)
+                    DetailView(item: selectedItem, onDismiss: {})
                 }
                 .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .automatic))
             } else {
                 NavigationStack {
                     listContent
                         .navigationDestination(for: Item.self) { item in
-                            DetailView(item: item)
+                            DetailView(item: item, onDismiss: {})
                         }
                 }
                 .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .automatic))
@@ -31,86 +39,137 @@ struct HomeView: View {
         }
     }
     
+    // MARK: ListContent view
     @ViewBuilder
     private var listContent: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 24) {
-                if viewModel.isLoading {
-                    ProgressView()
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                } else if let errorMessage = viewModel.errorMessage {
-                    VStack(spacing: 16) {
-                        Image(systemName: "exclamationmark.triangle")
-                            .font(.system(size: 48))
-                            .foregroundStyle(.secondary)
-                        Text("Erreur")
-                            .font(.headline)
-                            .foregroundStyle(.primary)
-                        Text(errorMessage)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                        Button("Réessayer") {
-                            Task {
-                                await viewModel.loadClothes()
-                            }
-                        }
-                        .buttonStyle(.borderedProminent)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                } else if viewModel.filteredCategories.isEmpty && !viewModel.searchText.isEmpty {
-                    VStack(spacing: 16) {
-                        Image(systemName: "magnifyingglass")
-                            .font(.system(size: 48))
-                            .foregroundStyle(.secondary)
-                        Text("Aucun résultat")
-                            .font(.headline)
-                            .foregroundStyle(.primary)
-                        Text("Aucun article ne correspond à \"\(viewModel.searchText)\"")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.center)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                } else {
-                    ForEach(viewModel.filteredCategories, id: \.self) { category in
-                        let items = viewModel.filteredItems(for: category)
-                        if !items.isEmpty {
-                            VStack(alignment: .leading, spacing: 16) {
-                                Text(viewModel.formattedCategory(category))
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                    .foregroundStyle(.primary)
-                                    .padding(.horizontal)
-                                
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    HStack(spacing: 16) {
-                                        ForEach(items) { item in
-                                            if horizontalSizeClass == .regular {
-                                                Button {
-                                                    selectedItem = item
-                                                } label: {
-                                                    ItemCardView(item: item)
-                                                }
-                                                .buttonStyle(.plain)
-                                            } else {
-                                                NavigationLink(value: item) {
-                                                    ItemCardView(item: item)
+        VStack(spacing: 0) {
+            Picker("Filtre", selection: $viewModel.filterMode) {
+                ForEach(FilterMode.allCases, id: \.self) { mode in
+                    Text(mode.rawValue).tag(mode)
+                }
+            }
+            .pickerStyle(.segmented)
+            .padding()
+            
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 24) {
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                    } else if let errorMessage = viewModel.errorMessage {
+                        errorView(errorMessage)
+                    } else if viewModel.shouldShowNoSearchResults(favoriteIds: favoriteIds) {
+                        noSearchResultsView
+                    } else if viewModel.shouldShowEmptyFavorites(favoriteIds: favoriteIds) {
+                        emptyFavoritesView
+                    } else {
+                        ForEach(viewModel.filteredCategories(favoriteIds: favoriteIds), id: \.self) { category in
+                            let items = viewModel.filteredItems(for: category, favoriteIds: favoriteIds)
+                            if !items.isEmpty {
+                                VStack(alignment: .leading, spacing: 16) {
+                                    Text(viewModel.formattedCategory(category))
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                        .foregroundStyle(.primary)
+                                        .padding(.horizontal)
+                                    
+                                    ScrollView(.horizontal, showsIndicators: false) {
+                                        HStack(spacing: 16) {
+                                            ForEach(items) { item in
+                                                if horizontalSizeClass == .regular {
+                                                    Button {
+                                                        selectedItem = item
+                                                    } label: {
+                                                        ItemCardView(
+                                                            item: item,
+                                                            userItemDataService: viewModel.userItemDataService
+                                                        )
+                                                    }
+                                                    .buttonStyle(.plain)
+                                                } else {
+                                                    NavigationLink(value: item) {
+                                                        ItemCardView(
+                                                            item: item,
+                                                            userItemDataService: viewModel.userItemDataService
+                                                        )
+                                                    }
+                                                    .buttonStyle(.plain)
                                                 }
                                             }
                                         }
+                                        .padding(.horizontal)
                                     }
-                                    .padding(.horizontal)
                                 }
                             }
                         }
                     }
                 }
+                .padding(.vertical)
             }
-            .padding(.vertical)
         }
+    }
+    
+    // MARK: Helper views
+    private func errorView(_ error: String) -> some View {
+        VStack(spacing: 16) {
+            Image(systemName: "exclamationmark.triangle")
+                .font(.system(size: 48))
+                .foregroundStyle(.secondary)
+            Text("Erreur")
+                .font(.headline)
+                .foregroundStyle(.primary)
+            Text(error)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            Button("Réessayer") {
+                Task {
+                    await viewModel.loadClothes()
+                }
+            }
+            .buttonStyle(.borderedProminent)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+    }
+
+    @ViewBuilder
+    private var noSearchResultsView: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 48))
+                .foregroundStyle(.secondary)
+            Text("Aucun résultat")
+                .font(.headline)
+                .foregroundStyle(.primary)
+            Text("Aucun article ne correspond à \"\(viewModel.searchText)\"")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+    }
+
+    @ViewBuilder
+    private var emptyFavoritesView: some View {
+        VStack(spacing: 20) {
+            Image(systemName: "heart.slash")
+                .font(.system(size: 60))
+                .foregroundStyle(.secondary)
+
+            Text("Pas de favoris")
+                .font(.title2)
+                .fontWeight(.semibold)
+
+            Text("Ajoutez des articles à vos favoris pour les retrouver ici")
+                .font(.body)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
     }
 }
 
