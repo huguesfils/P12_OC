@@ -1,7 +1,8 @@
 import Foundation
 import SwiftData
 
-protocol UserItemDataServiceProtocol: Sendable {
+// MARK: Interface
+public protocol UserItemDataServiceProtocol: Sendable {
     func toggleFavorite(itemId: Int) async throws
     func setRating(itemId: Int, rating: Int) async throws
     func setComment(itemId: Int, comment: String) async throws
@@ -11,6 +12,7 @@ protocol UserItemDataServiceProtocol: Sendable {
     func getAllFavoriteIds() async -> [Int]
 }
 
+// MARK: Service
 @MainActor
 final class UserItemDataService: UserItemDataServiceProtocol {
     private let modelContainer: ModelContainer
@@ -35,7 +37,7 @@ final class UserItemDataService: UserItemDataServiceProtocol {
         return newData
     }
     
-    // MARK: - Public Methods
+    // MARK: Methods
     
     func toggleFavorite(itemId: Int) async throws {
         let context = ModelContext(modelContainer)

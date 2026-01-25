@@ -1,14 +1,24 @@
 import SwiftUI
+import SwiftData
 
 struct DetailView: View {
     // MARK: Properties
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @State private var userRating: Int = 0
-    @State private var userComment: String = ""
+    @Environment(\.dismiss) private var dismiss
+    @State private var viewModel = DetailViewModel()
+    @State private var localComment: String = ""
+    @Query private var allUserData: [UserItemData]
+
     let item: Item?
-    
+    let onDismiss: () -> Void
+
     private var photoMaxHeight: CGFloat {
         horizontalSizeClass == .regular ? 600 : 400
+    }
+
+    private var userData: UserItemData? {
+        guard let item = item else { return nil }
+        return allUserData.first { $0.itemId == item.id }
     }
     
     // MARK: Body
@@ -18,52 +28,65 @@ struct DetailView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     PhotoView(
+                        itemId: item.id,
                         imageURL: item.picture.url,
                         initialLikeCount: item.likes,
+                        isFavorite: userData?.isFavorite ?? false,
                         customHeight: photoMaxHeight,
-                        customMaxWidth: .infinity
+                        customMaxWidth: .infinity,
+                        onToggleFavorite: { itemId in
+                            Task {
+                                try? await viewModel.userItemDataService.toggleFavorite(itemId: itemId)
+                            }
+                        }
                     )
-                    
+
                     InfoItemView(
                         label: item.name,
                         price: item.price,
                         originalPrice: item.originalPrice,
                         style: .regular
                     )
-                    
+
                     Text(item.picture.description)
                         .font(.body)
                         .foregroundStyle(.secondary)
                         .lineSpacing(4)
-                    
-                    HStack(spacing: 12) {
-                        Image(systemName: "person.circle.fill")
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                            .foregroundStyle(.secondary)
-                        
-                        HStack(spacing: 8) {
-                            ForEach(1...5, id: \.self) { star in
-                                Button(action: {
-                                    userRating = star
-                                }) {
-                                    Image(systemName: star <= userRating ? "star.fill" : "star")
-                                        .font(.system(size: 28))
-                                        .foregroundStyle(star <= userRating ? .orange : .secondary)
-                                }
+
+                    RatingView(
+                        itemId: item.id,
+                        currentRating: userData?.rating ?? 0,
+                        onRatingChange: { itemId, rating in
+                            Task {
+                                try? await viewModel.userItemDataService.setRating(itemId: itemId, rating: rating)
                             }
                         }
-                    }
-                    
-                    TextField("Partagez ici vos impressions sur cette pièce", text: $userComment, axis: .vertical)
-                        .lineLimit(5...10)
-                        .padding(12)
-                        .background(Color(uiColor: .systemGray6))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                    
+                    )
+
+                    CommentView(
+                        itemId: item.id,
+                        currentComment: userData?.comment ?? "",
+                        localComment: $localComment
+                    )
+
                     Spacer()
                 }
                 .padding()
+            }
+            .onChange(of: item.id) { oldId, newId in
+                if oldId != newId, localComment != (allUserData.first { $0.itemId == oldId }?.comment ?? "") {
+                    let commentToSave = localComment
+                    Task {
+                        try? await viewModel.userItemDataService.setComment(itemId: oldId, comment: commentToSave)
+                    }
+                }
+            }
+            .onDisappear {
+                if localComment != userData?.comment {
+                    Task {
+                        try? await viewModel.userItemDataService.setComment(itemId: item.id, comment: localComment)
+                    }
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
