@@ -8,28 +8,31 @@ struct HomeView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.modelContext) private var modelContext
     @Query private var allUserData: [UserItemData]
-    
+
     private var favoriteIds: Set<Int> {
         Set(allUserData.filter { $0.isFavorite }.map { $0.itemId })
     }
-    
+
+    private var isCompact: Bool {
+        horizontalSizeClass != .regular
+    }
+
     // MARK: Body
-    @ViewBuilder
     var body: some View {
         Group {
-            if horizontalSizeClass == .regular {
-                NavigationSplitView {
-                    listContent
-                } detail: {
-                    DetailView(item: selectedItem, onDismiss: {})
-                }
-                .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .automatic))
-            } else {
+            if isCompact {
                 NavigationStack {
                     listContent
                         .navigationDestination(for: Item.self) { item in
                             DetailView(item: item, onDismiss: {})
                         }
+                }
+                .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .automatic))
+            } else {
+                NavigationSplitView {
+                    listContent
+                } detail: {
+                    DetailView(item: selectedItem, onDismiss: {})
                 }
                 .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .automatic))
             }
@@ -38,7 +41,7 @@ struct HomeView: View {
             await viewModel.loadClothes()
         }
     }
-    
+
     // MARK: ListContent view
     @ViewBuilder
     private var listContent: some View {
@@ -50,7 +53,7 @@ struct HomeView: View {
             }
             .pickerStyle(.segmented)
             .padding()
-            
+
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 24) {
                     if viewModel.isLoading {
@@ -70,32 +73,14 @@ struct HomeView: View {
                                 VStack(alignment: .leading, spacing: 16) {
                                     Text(viewModel.formattedCategory(category))
                                         .font(.title)
-                                        .fontWeight(.bold)
+                                        .bold()
                                         .foregroundStyle(.primary)
                                         .padding(.horizontal)
-                                    
+
                                     ScrollView(.horizontal, showsIndicators: false) {
                                         HStack(spacing: 16) {
                                             ForEach(items) { item in
-                                                if horizontalSizeClass == .regular {
-                                                    Button {
-                                                        selectedItem = item
-                                                    } label: {
-                                                        ItemCardView(
-                                                            item: item,
-                                                            userItemDataService: viewModel.userItemDataService
-                                                        )
-                                                    }
-                                                    .buttonStyle(.plain)
-                                                } else {
-                                                    NavigationLink(value: item) {
-                                                        ItemCardView(
-                                                            item: item,
-                                                            userItemDataService: viewModel.userItemDataService
-                                                        )
-                                                    }
-                                                    .buttonStyle(.plain)
-                                                }
+                                                itemCard(for: item)
                                             }
                                         }
                                         .padding(.horizontal)
@@ -109,7 +94,25 @@ struct HomeView: View {
             }
         }
     }
-    
+
+    // MARK: Item card
+    @ViewBuilder
+    private func itemCard(for item: Item) -> some View {
+        if isCompact {
+            NavigationLink(value: item) {
+                ItemCardView(item: item, userItemDataService: viewModel.userItemDataService)
+            }
+            .buttonStyle(.plain)
+        } else {
+            Button {
+                selectedItem = item
+            } label: {
+                ItemCardView(item: item, userItemDataService: viewModel.userItemDataService)
+            }
+            .buttonStyle(.plain)
+        }
+    }
+
     // MARK: Helper views
     private func errorView(_ error: String) -> some View {
         VStack(spacing: 16) {

@@ -34,9 +34,9 @@ struct DetailView: View {
                         isFavorite: userData?.isFavorite ?? false,
                         customHeight: photoMaxHeight,
                         customMaxWidth: .infinity,
-                        onToggleFavorite: { itemId in
+                        onToggleFavorite: { [weak viewModel] itemId in
                             Task {
-                                try? await viewModel.userItemDataService.toggleFavorite(itemId: itemId)
+                                await viewModel?.toggleFavorite(itemId: itemId)
                             }
                         }
                     )
@@ -56,9 +56,9 @@ struct DetailView: View {
                     RatingView(
                         itemId: item.id,
                         currentRating: userData?.rating ?? 0,
-                        onRatingChange: { itemId, rating in
+                        onRatingChange: { [weak viewModel] itemId, rating in
                             Task {
-                                try? await viewModel.userItemDataService.setRating(itemId: itemId, rating: rating)
+                                await viewModel?.saveRating(itemId: itemId, rating: rating)
                             }
                         }
                     )
@@ -77,14 +77,14 @@ struct DetailView: View {
                 if oldId != newId, localComment != (allUserData.first { $0.itemId == oldId }?.comment ?? "") {
                     let commentToSave = localComment
                     Task {
-                        try? await viewModel.userItemDataService.setComment(itemId: oldId, comment: commentToSave)
+                        await viewModel.setComment(itemId: oldId, comment: commentToSave)
                     }
                 }
             }
             .onDisappear {
-                if localComment != userData?.comment {
+                if localComment != (userData?.comment ?? "") {
                     Task {
-                        try? await viewModel.userItemDataService.setComment(itemId: item.id, comment: localComment)
+                        await viewModel.setComment(itemId: item.id, comment: localComment)
                     }
                 }
             }

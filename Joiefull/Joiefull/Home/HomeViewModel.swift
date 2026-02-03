@@ -53,6 +53,7 @@ public class HomeViewModel {
         do {
             items = try await service.fetchClothes()
         } catch {
+            AppLogger.error(error)
             errorMessage = error.localizedDescription
         }
 
@@ -67,7 +68,8 @@ public class HomeViewModel {
         do {
             try await userItemDataService.toggleFavorite(itemId: itemId)
         } catch {
-            errorMessage = "Impossible de sauvegarder le favori"
+            AppLogger.error(error)
+            errorMessage = JoieFullError.saveFavorite.localizedDescription
         }
     }
     

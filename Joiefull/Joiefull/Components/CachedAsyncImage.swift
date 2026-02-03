@@ -63,7 +63,7 @@ struct CachedAsyncImage: View {
         } catch is CancellationError {
             return
         } catch {
-            print("Error loading image: \(error)")
+            AppLogger.error(error)
             isLoading = false
         }
         
