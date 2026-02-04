@@ -6,11 +6,11 @@ struct HomeView: View {
     @State private var viewModel = HomeViewModel()
     @State private var selectedItem: Item?
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
-    @Environment(\.modelContext) private var modelContext
-    @Query private var allUserData: [UserItemData]
+    @Query(filter: #Predicate<UserItemData> { $0.isFavorite })
+    private var favorites: [UserItemData]
 
     private var favoriteIds: Set<Int> {
-        Set(allUserData.filter { $0.isFavorite }.map { $0.itemId })
+        Set(favorites.map { $0.itemId })
     }
 
     private var isCompact: Bool {

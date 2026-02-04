@@ -8,7 +8,7 @@ public struct ItemCardView: View {
     let item: Item
 
     private var isFavorite: Bool {
-        allUserData.first { $0.itemId == item.id }?.isFavorite ?? false
+        allUserData.first?.isFavorite ?? false
     }
 
     public init(item: Item, userItemDataService: UserItemDataServiceProtocol) {
