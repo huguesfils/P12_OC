@@ -1,5 +1,6 @@
 import Foundation
 import FactoryKit
+import SwiftData
 
 extension Container {
     // MARK: - Network Layer
@@ -14,6 +15,21 @@ extension Container {
     var clothesService: Factory<ClothesServiceProtocol> {
         self {
             ClothesService(networkClient: self.networkClient())
+        }
+        .singleton
+    }
+    
+    // MARK: - Storage
+    var modelContainer: Factory<ModelContainer> {
+        self {
+            fatalError("ModelContainer must be registered from JoiefullApp")
+        }
+        .singleton
+    }
+
+    var userItemDataService: Factory<UserItemDataServiceProtocol> {
+        self {
+            UserItemDataService(modelContainer: self.modelContainer())
         }
         .singleton
     }

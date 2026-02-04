@@ -1,9 +1,11 @@
 import Foundation
 
+// MARK: Interface
 protocol NetworkClientProtocol: Sendable {
     func request<T: Decodable>(_ endpoint: String) async throws -> T
 }
 
+// MARK: Network client
 final class NetworkClient: NetworkClientProtocol {
     private let session: URLSession
     

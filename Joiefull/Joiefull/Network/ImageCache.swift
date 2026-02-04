@@ -1,5 +1,6 @@
 import UIKit
 
+@MainActor
 final class ImageCache {
     //MARK: Singleton
     static let shared = ImageCache()
