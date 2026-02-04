@@ -8,7 +8,7 @@ struct JoiefullApp: App {
         
     init() {
         do {
-            let container = try ModelContainer(for: UserItemData.self)
+            let container = try ModelContainer(for: UserItemData.self, migrationPlan: UserItemDataMigrationPlan.self)
             modelContainer = container
             
             Container.shared.modelContainer.register {
