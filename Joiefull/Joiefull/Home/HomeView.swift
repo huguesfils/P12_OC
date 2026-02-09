@@ -60,6 +60,7 @@ struct HomeView: View {
                         ProgressView()
                             .frame(maxWidth: .infinity)
                             .padding()
+                            .accessibilityLabel("Chargement des articles")
                     } else if let errorMessage = viewModel.errorMessage {
                         errorView(errorMessage)
                     } else if viewModel.shouldShowNoSearchResults(favoriteIds: favoriteIds) {
@@ -76,6 +77,7 @@ struct HomeView: View {
                                         .bold()
                                         .foregroundStyle(.primary)
                                         .padding(.horizontal)
+                                        .accessibilityAddTraits(.isHeader)
 
                                     ScrollView(.horizontal, showsIndicators: false) {
                                         HStack(spacing: 16) {
@@ -85,6 +87,8 @@ struct HomeView: View {
                                         }
                                         .padding(.horizontal)
                                     }
+                                    .accessibilityLabel("\(items.count) articles")
+                                    .accessibilityHint("Balayez pour voir plus d'articles")
                                 }
                             }
                         }
@@ -92,6 +96,7 @@ struct HomeView: View {
                 }
                 .padding(.vertical)
             }
+            .scrollDismissesKeyboard(.immediately)
         }
     }
 
@@ -119,6 +124,7 @@ struct HomeView: View {
             Image(systemName: "exclamationmark.triangle")
                 .font(.system(size: 48))
                 .foregroundStyle(.secondary)
+                .accessibilityHidden(true)
             Text("Erreur")
                 .font(.headline)
                 .foregroundStyle(.primary)
@@ -134,14 +140,15 @@ struct HomeView: View {
         }
         .frame(maxWidth: .infinity)
         .padding()
+        .accessibilityElement(children: .combine)
     }
 
-    @ViewBuilder
     private var noSearchResultsView: some View {
         VStack(spacing: 16) {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 48))
                 .foregroundStyle(.secondary)
+                .accessibilityHidden(true)
             Text("Aucun résultat")
                 .font(.headline)
                 .foregroundStyle(.primary)
@@ -152,14 +159,15 @@ struct HomeView: View {
         }
         .frame(maxWidth: .infinity)
         .padding()
+        .accessibilityElement(children: .combine)
     }
 
-    @ViewBuilder
     private var emptyFavoritesView: some View {
         VStack(spacing: 20) {
             Image(systemName: "heart.slash")
                 .font(.system(size: 60))
                 .foregroundStyle(.secondary)
+                .accessibilityHidden(true)
 
             Text("Pas de favoris")
                 .font(.title2)
@@ -173,6 +181,7 @@ struct HomeView: View {
         }
         .frame(maxWidth: .infinity)
         .padding()
+        .accessibilityElement(children: .combine)
     }
 }
 

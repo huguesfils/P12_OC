@@ -7,6 +7,7 @@ struct PhotoView: View {
     let itemId: Int
     let imageURL: String?
     let imageName: String?
+    let imageDescription: String?
     let customHeight: CGFloat?
     let customMaxWidth: CGFloat?
     let initialLikeCount: Int
@@ -25,6 +26,7 @@ struct PhotoView: View {
         itemId: Int,
         imageURL: String? = nil,
         imageName: String? = nil,
+        imageDescription: String? = nil,
         initialLikeCount: Int = 0,
         isFavorite: Bool = false,
         customHeight: CGFloat? = nil,
@@ -34,6 +36,7 @@ struct PhotoView: View {
         self.itemId = itemId
         self.imageURL = imageURL
         self.imageName = imageName
+        self.imageDescription = imageDescription
         self.initialLikeCount = initialLikeCount
         self.isFavorite = isFavorite
         self.customHeight = customHeight
@@ -42,7 +45,6 @@ struct PhotoView: View {
     }
     
     // MARK: Body
-    @ViewBuilder
     var body: some View {
         Group {
             if let imageURL = imageURL, let url = URL(string: imageURL) {
@@ -61,7 +63,9 @@ struct PhotoView: View {
         }
         .frame(maxWidth: maxWidth, maxHeight: imageHeight)
         .clipped()
-        .cornerRadius(20)
+        .clipShape(.rect(cornerRadius: 20))
+        .accessibilityLabel(imageDescription ?? "Image de l'article")
+        .accessibilityAddTraits(.isImage)
         .overlay(alignment: .bottomTrailing) {
             LikeBadgeView(
                 itemId: itemId,

@@ -44,16 +44,24 @@ struct InfoItemView: View {
     private var hasDiscount: Bool {
         originalPrice > price
     }
-    
+
+    private var accessibilityText: String {
+        var text = "\(label), \(Int(price)) euros"
+        if hasDiscount {
+            text += ", prix original \(Int(originalPrice)) euros"
+        }
+        text += ", note moyenne 4.6 sur 5"
+        return text
+    }
+
     init(label: String, price: Double, originalPrice: Double, style: Style = .compact) {
         self.label = label
         self.price = price
         self.originalPrice = originalPrice
         self.style = style
     }
-    
+
     // MARK: Body
-    @ViewBuilder
     var body: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: style.spacing) {
@@ -63,14 +71,14 @@ struct InfoItemView: View {
                     .foregroundStyle(.primary)
                     .lineLimit(1)
                     .truncationMode(.tail)
-                
-                Text(String(format: "%.0f€", price))
+
+                Text(price, format: .currency(code: "EUR").precision(.fractionLength(0)))
                     .font(style.priceFont)
                     .foregroundStyle(.primary)
             }
-            
+
             Spacer()
-            
+
             VStack(alignment: .trailing, spacing: style.spacing) {
                 HStack(spacing: 4) {
                     Image(systemName: "star.fill")
@@ -81,14 +89,16 @@ struct InfoItemView: View {
                         .fontWeight(.medium)
                         .foregroundStyle(.primary)
                 }
-               
+
                 if hasDiscount {
-                    Text(String(format: "%.0f€", originalPrice))
+                    Text(originalPrice, format: .currency(code: "EUR").precision(.fractionLength(0)))
                         .font(style.priceFont)
                         .strikethrough()
                         .foregroundStyle(.secondary)
                 }
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityText)
     }
 }
