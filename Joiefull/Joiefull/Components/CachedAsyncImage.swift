@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CachedAsyncImage: View {
-    //MARK: Properties
+    // MARK: Properties
     @State private var uiImage: UIImage?
     @State private var isLoading: Bool = true
     
@@ -63,7 +63,7 @@ struct CachedAsyncImage: View {
         } catch is CancellationError {
             return
         } catch {
-            print("Error loading image: \(error)") // enum d'erreur
+            AppLogger.error(error)
             isLoading = false
         }
         
