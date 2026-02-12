@@ -30,6 +30,7 @@ struct DetailView: View {
                     PhotoView(
                         itemId: item.id,
                         imageURL: item.picture.url,
+                        imageDescription: item.picture.description,
                         initialLikeCount: item.likes,
                         isFavorite: userData?.isFavorite ?? false,
                         customHeight: photoMaxHeight,
@@ -52,6 +53,7 @@ struct DetailView: View {
                         .font(.body)
                         .foregroundStyle(.secondary)
                         .lineSpacing(4)
+                        .accessibilityLabel(item.picture.description)
 
                     RatingView(
                         itemId: item.id,
@@ -73,6 +75,7 @@ struct DetailView: View {
                 }
                 .padding()
             }
+            .scrollDismissesKeyboard(.immediately)
             .onChange(of: item.id) { oldId, newId in
                 if oldId != newId, localComment != (allUserData.first { $0.itemId == oldId }?.comment ?? "") {
                     let service = viewModel.userItemDataService
@@ -96,6 +99,7 @@ struct DetailView: View {
                     Button(action: {}) {
                         Image(systemName: "square.and.arrow.up")
                     }
+                    .accessibilityLabel("Partager")
                 }
             }
         } else {
@@ -103,10 +107,13 @@ struct DetailView: View {
                 Image(systemName: "hand.tap")
                     .font(.system(size: 80))
                     .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
                 Text("Sélectionnez un article")
                     .font(.title2)
                     .foregroundStyle(.secondary)
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Sélectionnez un article pour voir ses détails")
         }
     }
 }

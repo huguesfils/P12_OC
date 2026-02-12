@@ -7,13 +7,14 @@ struct CommentView: View {
     @Binding var localComment: String
 
     // MARK: Body
-    @ViewBuilder
     var body: some View {
         TextField("Partagez ici vos impressions sur cette pièce", text: $localComment, axis: .vertical)
             .lineLimit(5...10)
             .padding(12)
             .background(Color(.systemGray6))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(.rect(cornerRadius: 12))
+            .accessibilityLabel("Votre commentaire")
+            .accessibilityHint("Partagez vos impressions sur cet article")
             .onChange(of: itemId) { _, _ in
                 localComment = currentComment
             }

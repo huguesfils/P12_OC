@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftData
 
-public struct ItemCardView: View {
+struct ItemCardView: View {
     // MARK: Properties
     @Query private var allUserData: [UserItemData]
     let userItemDataService: UserItemDataServiceProtocol
@@ -11,7 +11,7 @@ public struct ItemCardView: View {
         allUserData.first?.isFavorite ?? false
     }
 
-    public init(item: Item, userItemDataService: UserItemDataServiceProtocol) {
+    init(item: Item, userItemDataService: UserItemDataServiceProtocol) {
         self.item = item
         self.userItemDataService = userItemDataService
 
@@ -23,17 +23,21 @@ public struct ItemCardView: View {
     }
 
     // MARK: Body
-    @ViewBuilder
-    public var body: some View {
+    var body: some View {
         VStack(spacing: 0) {
             PhotoView(
                 itemId: item.id,
                 imageURL: item.picture.url,
+                imageDescription: item.picture.description,
                 initialLikeCount: item.likes,
                 isFavorite: isFavorite,
                 onToggleFavorite: { itemId in
                     Task {
-                        try? await userItemDataService.toggleFavorite(itemId: itemId)
+                        do {
+                            try await userItemDataService.toggleFavorite(itemId: itemId)
+                        } catch {
+                            AppLogger.error(error)
+                        }
                     }
                 }
             )
@@ -46,5 +50,6 @@ public struct ItemCardView: View {
             .padding(8)
         }
         .frame(width: 200)
+        .accessibilityHint("Double-tapez pour voir les détails")
     }
 }

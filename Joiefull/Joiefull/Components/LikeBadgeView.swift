@@ -10,7 +10,15 @@ struct LikeBadgeView: View {
     private var displayCount: Int {
         initialLikeCount + (isFavorite ? 1 : 0)
     }
-    
+
+    private var accessibilityLabelText: String {
+        isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"
+    }
+
+    private var accessibilityValueText: String {
+        "\(displayCount) j'aime"
+    }
+
     // MARK: Body
     var body: some View {
         Button {
@@ -36,5 +44,8 @@ struct LikeBadgeView: View {
             )
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(accessibilityLabelText)
+        .accessibilityValue(accessibilityValueText)
+        .accessibilityHint("Double-tapez pour modifier")
     }
 }
