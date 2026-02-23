@@ -9,6 +9,7 @@ Application iOS de catalogue de vetements, developpee en **SwiftUI** dans le cad
 - Ajout/retrait de favoris
 - Notation par etoiles (1-5) et commentaires
 - Cache d'images pour une navigation fluide
+- Partage d'articles (texte + photo) via le bouton de partage
 
 ## Architecture
 
@@ -22,7 +23,7 @@ Views (SwiftUI)  →  ViewModels (@Observable)  →  Services (Protocols)  →  
 |--------|------|----------|
 | **View** | Interface declarative, aucune logique metier | `HomeView`, `DetailView`, 7 composants reutilisables |
 | **ViewModel** | Logique metier, etats, actions async | `HomeViewModel`, `DetailViewModel` |
-| **Service** | Acces aux donnees via protocoles | `ClothesService`, `UserItemDataService`, `NetworkClient` |
+| **Service** | Acces aux donnees via protocoles | `ClothesService`, `UserItemDataService`, `ImageDownloadService`, `NetworkClient` |
 | **Model** | Structures de donnees | `Item` (API), `UserItemData` (SwiftData) |
 
 ## Stack technique
@@ -34,7 +35,7 @@ Views (SwiftUI)  →  ViewModels (@Observable)  →  Services (Protocols)  →  
 | Reseau | URLSession / async-await |
 | Injection de dependances | Factory |
 | Concurrence | Swift Concurrency (@MainActor, async/await) |
-| Tests | Swift Testing (63 tests) |
+| Tests | Swift Testing (76 tests) |
 | Observabilite | @Observable (pas ObservableObject) |
 | Logs | OSLog (AppLogger) |
 
@@ -56,15 +57,17 @@ L'interface s'adapte automatiquement au format d'ecran via `horizontalSizeClass`
 
 ## Tests
 
-63 tests unitaires et d'integration couvrant toutes les couches :
+76 tests unitaires et d'integration couvrant toutes les couches :
 
 | Fichier | Tests | Perimetre |
 |---------|-------|-----------|
-| `HomeViewModelTests` | 27 | Chargement, filtrage, recherche, favoris, etats vides |
-| `DetailViewModelTests` | 14 | Notation, commentaires, favoris, gestion d'erreurs |
-| `UserItemDataServiceTests` | 22 | CRUD SwiftData, operations combinees, isolation memoire |
+| `HomeViewModelTests` | 25 | Chargement, filtrage, recherche, favoris, etats vides |
+| `UserItemDataServiceTests` | 21 | CRUD SwiftData, operations combinees, isolation memoire |
+| `DetailViewModelTests` | 14 | Notation, commentaires, favoris, partage d'image, erreurs |
+| `NetworkLayerTests` | 10 | NetworkClient (succes, erreurs HTTP/decodage/reseau), ImageDownloadService (download, cache, erreurs) |
+| `APIErrorTests` | 6 | Messages d'erreur localises pour chaque cas |
 
-**Strategie** : mocks par protocole, stockage in-memory, cas succes + erreur + limites testes systematiquement.
+**Strategie** : mocks par protocole, stockage in-memory, cas succes + erreur + limites testes systematiquement. Couverture >90% sur tous les ViewModels et services.
 
 ## Lancer le projet
 
