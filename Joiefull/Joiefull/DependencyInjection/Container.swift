@@ -19,6 +19,13 @@ extension Container {
         .singleton
     }
     
+    var imageDownloadService: Factory<ImageDownloadServiceProtocol> {
+        self {
+            ImageDownloadService(session: .shared)
+        }
+        .singleton
+    }
+
     // MARK: - Storage
     var modelContainer: Factory<ModelContainer> {
         self {

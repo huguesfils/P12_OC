@@ -4,13 +4,11 @@ import SwiftData
 struct DetailView: View {
     // MARK: Properties
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @Environment(\.dismiss) private var dismiss
     @State private var viewModel = DetailViewModel()
     @State private var localComment: String = ""
     @Query private var allUserData: [UserItemData]
 
     let item: Item?
-    let onDismiss: () -> Void
 
     private var photoMaxHeight: CGFloat {
         horizontalSizeClass == .regular ? 600 : 400
@@ -94,12 +92,17 @@ struct DetailView: View {
                     }
                 }
             }
+            .task {
+                await viewModel.loadShareImage(from: item.picture.url)
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {}) {
+                    Button {
+                        shareItem(item)
+                    } label: {
                         Image(systemName: "square.and.arrow.up")
                     }
-                    .accessibilityLabel("Partager")
+                    .accessibilityLabel("Partager cet article")
                 }
             }
         } else {
@@ -115,5 +118,26 @@ struct DetailView: View {
             .accessibilityElement(children: .combine)
             .accessibilityLabel("Sélectionnez un article pour voir ses détails")
         }
+    }
+
+    // MARK: Share
+
+    private func shareItem(_ item: Item) {
+        let priceText = String(format: "%.2f", item.price)
+        var items: [Any] = ["\(item.name) - \(priceText)€\n\(item.picture.description)"]
+        if let image = viewModel.shareImage {
+            items.append(image)
+        }
+        let activityVC = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let rootVC = windowScene.keyWindow?.rootViewController else { return }
+
+        if let popover = activityVC.popoverPresentationController {
+            popover.sourceView = rootVC.view
+            popover.sourceRect = CGRect(x: rootVC.view.bounds.midX, y: 0, width: 0, height: 0)
+            popover.permittedArrowDirections = .up
+        }
+
+        rootVC.present(activityVC, animated: true)
     }
 }

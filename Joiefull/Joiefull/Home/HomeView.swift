@@ -24,7 +24,7 @@ struct HomeView: View {
                 NavigationStack {
                     listContent
                         .navigationDestination(for: Item.self) { item in
-                            DetailView(item: item, onDismiss: {})
+                            DetailView(item: item)
                         }
                 }
                 .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .automatic))
@@ -32,7 +32,7 @@ struct HomeView: View {
                 NavigationSplitView {
                     listContent
                 } detail: {
-                    DetailView(item: selectedItem, onDismiss: {})
+                    DetailView(item: selectedItem)
                 }
                 .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .automatic))
             }

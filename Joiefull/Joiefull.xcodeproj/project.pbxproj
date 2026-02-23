@@ -19,19 +19,11 @@
 			remoteGlobalIDString = 652B46CD2EDF01AD00972F0A;
 			remoteInfo = Joiefull;
 		};
-		652B46E62EDF01AF00972F0A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 652B46C62EDF01AD00972F0A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 652B46CD2EDF01AD00972F0A;
-			remoteInfo = Joiefull;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		652B46CE2EDF01AD00972F0A /* Joiefull.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Joiefull.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		652B46DB2EDF01AF00972F0A /* JoiefullTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JoiefullTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		652B46E52EDF01AF00972F0A /* JoiefullUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JoiefullUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -78,11 +70,6 @@
 			path = JoiefullTests;
 			sourceTree = "<group>";
 		};
-		652B46E82EDF01AF00972F0A /* JoiefullUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = JoiefullUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,13 +89,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		652B46E22EDF01AF00972F0A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -117,7 +97,6 @@
 			children = (
 				652B46D02EDF01AD00972F0A /* Joiefull */,
 				652B46DE2EDF01AF00972F0A /* JoiefullTests */,
-				652B46E82EDF01AF00972F0A /* JoiefullUITests */,
 				652B46CF2EDF01AD00972F0A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -127,7 +106,6 @@
 			children = (
 				652B46CE2EDF01AD00972F0A /* Joiefull.app */,
 				652B46DB2EDF01AF00972F0A /* JoiefullTests.xctest */,
-				652B46E52EDF01AF00972F0A /* JoiefullUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -182,29 +160,6 @@
 			productReference = 652B46DB2EDF01AF00972F0A /* JoiefullTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		652B46E42EDF01AF00972F0A /* JoiefullUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 652B46F52EDF01AF00972F0A /* Build configuration list for PBXNativeTarget "JoiefullUITests" */;
-			buildPhases = (
-				652B46E12EDF01AF00972F0A /* Sources */,
-				652B46E22EDF01AF00972F0A /* Frameworks */,
-				652B46E32EDF01AF00972F0A /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				652B46E72EDF01AF00972F0A /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				652B46E82EDF01AF00972F0A /* JoiefullUITests */,
-			);
-			name = JoiefullUITests;
-			packageProductDependencies = (
-			);
-			productName = JoiefullUITests;
-			productReference = 652B46E52EDF01AF00972F0A /* JoiefullUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -219,10 +174,6 @@
 						CreatedOnToolsVersion = 26.1.1;
 					};
 					652B46DA2EDF01AF00972F0A = {
-						CreatedOnToolsVersion = 26.1.1;
-						TestTargetID = 652B46CD2EDF01AD00972F0A;
-					};
-					652B46E42EDF01AF00972F0A = {
 						CreatedOnToolsVersion = 26.1.1;
 						TestTargetID = 652B46CD2EDF01AD00972F0A;
 					};
@@ -247,7 +198,6 @@
 			targets = (
 				652B46CD2EDF01AD00972F0A /* Joiefull */,
 				652B46DA2EDF01AF00972F0A /* JoiefullTests */,
-				652B46E42EDF01AF00972F0A /* JoiefullUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -261,13 +211,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		652B46D92EDF01AF00972F0A /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		652B46E32EDF01AF00972F0A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -291,13 +234,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		652B46E12EDF01AF00972F0A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -305,11 +241,6 @@
 			isa = PBXTargetDependency;
 			target = 652B46CD2EDF01AD00972F0A /* Joiefull */;
 			targetProxy = 652B46DC2EDF01AF00972F0A /* PBXContainerItemProxy */;
-		};
-		652B46E72EDF01AF00972F0A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 652B46CD2EDF01AD00972F0A /* Joiefull */;
-			targetProxy = 652B46E62EDF01AF00972F0A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -555,46 +486,6 @@
 			};
 			name = Release;
 		};
-		652B46F62EDF01AF00972F0A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RT62BPUMZ6;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = huguesfils.JoiefullUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Joiefull;
-			};
-			name = Debug;
-		};
-		652B46F72EDF01AF00972F0A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RT62BPUMZ6;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = huguesfils.JoiefullUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Joiefull;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -621,15 +512,6 @@
 			buildConfigurations = (
 				652B46F32EDF01AF00972F0A /* Debug */,
 				652B46F42EDF01AF00972F0A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		652B46F52EDF01AF00972F0A /* Build configuration list for PBXNativeTarget "JoiefullUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				652B46F62EDF01AF00972F0A /* Debug */,
-				652B46F72EDF01AF00972F0A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

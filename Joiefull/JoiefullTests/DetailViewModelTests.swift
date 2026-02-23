@@ -1,18 +1,22 @@
 import Testing
 import Foundation
+import UIKit
 @testable import Joiefull
 
 @MainActor
 struct DetailViewModelTests {
     // MARK: Properties
     let mockService: MockUserItemDataService
+    let mockImageService: MockImageDownloadService
     let viewModel: DetailViewModel
 
     // MARK: Init
     init() {
         let service = MockUserItemDataService()
+        let imageService = MockImageDownloadService()
         mockService = service
-        viewModel = DetailViewModel(userItemDataService: service)
+        mockImageService = imageService
+        viewModel = DetailViewModel(userItemDataService: service, imageDownloadService: imageService)
     }
 
     // MARK: - Toggle Favorite
@@ -119,5 +123,35 @@ struct DetailViewModelTests {
 
         #expect(viewModel.errorMessage == nil)
         #expect(mockService.comments[1] == "")
+    }
+
+    // MARK: - Load Share Image
+
+    @Test("Load share image succeeds")
+    func loadShareImageSuccess() async {
+        let testImage = UIImage(systemName: "star")!
+        mockImageService.imageToReturn = testImage
+
+        await viewModel.loadShareImage(from: "https://example.com/image.jpg")
+
+        #expect(viewModel.shareImage != nil)
+    }
+
+    @Test("Load share image failure sets shareImage to nil")
+    func loadShareImageFailure() async {
+        mockImageService.errorToThrow = APIError.invalidURL
+
+        await viewModel.loadShareImage(from: "invalid")
+
+        #expect(viewModel.shareImage == nil)
+    }
+
+    @Test("Load share image with no image returns nil")
+    func loadShareImageNoImage() async {
+        mockImageService.imageToReturn = nil
+
+        await viewModel.loadShareImage(from: "https://example.com/image.jpg")
+
+        #expect(viewModel.shareImage == nil)
     }
 }
