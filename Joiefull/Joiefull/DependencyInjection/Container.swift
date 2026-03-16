@@ -1,6 +1,7 @@
 import Foundation
 import FactoryKit
 import SwiftData
+import SwiftUI
 
 extension Container {
     // MARK: - Network Layer
@@ -39,5 +40,34 @@ extension Container {
             UserItemDataService(modelContainer: self.modelContainer())
         }
         .singleton
+    }
+}
+
+struct DIContainer {
+    
+    let networkClient: NetworkClientProtocol
+    let clothesService: ClothesServiceProtocol
+    let userItemService: UserItemDataServiceProtocol
+    let imageDownloadService: ImageDownloadServiceProtocol
+    
+    init(modelContainer: ModelContainer) {
+        let networkClient = NetworkClient(session: .shared)
+        self.networkClient = networkClient
+        self.clothesService = ClothesService(networkClient: networkClient)
+        self.imageDownloadService = ImageDownloadService(session: .shared)
+        self.userItemService = UserItemDataService(modelContainer: modelContainer)
+    }
+}
+
+// MARK: EnvironmentKey
+
+private struct DIContainerKey: EnvironmentKey {
+    static let defaultValue: DIContainer? = nil
+}
+
+extension EnvironmentValues {
+    var diContainer: DIContainer? {
+        get { self[DIContainerKey.self] }
+        set { self[DIContainerKey.self] = newValue }
     }
 }

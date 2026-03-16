@@ -3,20 +3,26 @@ import SwiftData
 
 struct HomeView: View {
     // MARK: Properties
-    @State private var viewModel = HomeViewModel()
+    @State private var viewModel: HomeViewModel
     @State private var selectedItem: Item?
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.diContainer) private var diContainer
     @Query(filter: #Predicate<UserItemData> { $0.isFavorite })
     private var favorites: [UserItemData]
-
+    
     private var favoriteIds: Set<Int> {
         Set(favorites.map { $0.itemId })
     }
-
+    
     private var isCompact: Bool {
         horizontalSizeClass != .regular
     }
-
+    
+    init(container: DIContainer) {
+        _viewModel = State(initialValue: HomeViewModel(service: container.clothesService,
+                                                       userItemDataService: container.userItemService))
+    }
+    
     // MARK: Body
     var body: some View {
         Group {
@@ -24,7 +30,10 @@ struct HomeView: View {
                 NavigationStack {
                     listContent
                         .navigationDestination(for: Item.self) { item in
-                            DetailView(item: item)
+                            if let diContainer {
+                                DetailView(item: item,
+                                           container: diContainer)
+                            }
                         }
                 }
                 .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .automatic))
@@ -32,7 +41,10 @@ struct HomeView: View {
                 NavigationSplitView {
                     listContent
                 } detail: {
-                    DetailView(item: selectedItem)
+                    if let diContainer {
+                        DetailView(item: selectedItem,
+                                   container: diContainer)
+                    }
                 }
                 .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .automatic))
             }
@@ -41,7 +53,7 @@ struct HomeView: View {
             await viewModel.loadClothes()
         }
     }
-
+    
     // MARK: ListContent view
     @ViewBuilder
     private var listContent: some View {
@@ -53,7 +65,7 @@ struct HomeView: View {
             }
             .pickerStyle(.segmented)
             .padding()
-
+            
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 24) {
                     if viewModel.isLoading {
@@ -78,7 +90,7 @@ struct HomeView: View {
                                         .foregroundStyle(.primary)
                                         .padding(.horizontal)
                                         .accessibilityAddTraits(.isHeader)
-
+                                    
                                     ScrollView(.horizontal, showsIndicators: false) {
                                         HStack(spacing: 16) {
                                             ForEach(items) { item in
@@ -99,7 +111,7 @@ struct HomeView: View {
             .scrollDismissesKeyboard(.immediately)
         }
     }
-
+    
     // MARK: Item card
     @ViewBuilder
     private func itemCard(for item: Item) -> some View {
@@ -117,7 +129,7 @@ struct HomeView: View {
             .buttonStyle(.plain)
         }
     }
-
+    
     // MARK: Helper views
     private func errorView(_ error: String) -> some View {
         VStack(spacing: 16) {
@@ -142,7 +154,7 @@ struct HomeView: View {
         .padding()
         .accessibilityElement(children: .combine)
     }
-
+    
     private var noSearchResultsView: some View {
         VStack(spacing: 16) {
             Image(systemName: "magnifyingglass")
@@ -161,18 +173,18 @@ struct HomeView: View {
         .padding()
         .accessibilityElement(children: .combine)
     }
-
+    
     private var emptyFavoritesView: some View {
         VStack(spacing: 20) {
             Image(systemName: "heart.slash")
                 .font(.system(size: 60))
                 .foregroundStyle(.secondary)
                 .accessibilityHidden(true)
-
+            
             Text("Pas de favoris")
                 .font(.title2)
                 .fontWeight(.semibold)
-
+            
             Text("Ajoutez des articles à vos favoris pour les retrouver ici")
                 .font(.body)
                 .foregroundStyle(.secondary)
@@ -185,6 +197,6 @@ struct HomeView: View {
     }
 }
 
-#Preview {
-    HomeView()
-}
+//#Preview {
+//    HomeView()
+//}

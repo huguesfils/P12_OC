@@ -11,8 +11,8 @@ public class DetailViewModel {
     var shareImage: UIImage?
 
     init(
-        userItemDataService: UserItemDataServiceProtocol = Container.shared.userItemDataService(),
-        imageDownloadService: ImageDownloadServiceProtocol = Container.shared.imageDownloadService()
+        userItemDataService: UserItemDataServiceProtocol,
+        imageDownloadService: ImageDownloadServiceProtocol
     ) {
         self.userItemDataService = userItemDataService
         self.imageDownloadService = imageDownloadService

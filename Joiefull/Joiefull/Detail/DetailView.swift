@@ -4,7 +4,7 @@ import SwiftData
 struct DetailView: View {
     // MARK: Properties
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @State private var viewModel = DetailViewModel()
+    @State private var viewModel: DetailViewModel
     @State private var localComment: String = ""
     @Query private var allUserData: [UserItemData]
 
@@ -17,6 +17,12 @@ struct DetailView: View {
     private var userData: UserItemData? {
         guard let item = item else { return nil }
         return allUserData.first { $0.itemId == item.id }
+    }
+    
+    init(item: Item?, container: DIContainer) {
+        self.item = item
+        _viewModel = State(initialValue: DetailViewModel(userItemDataService: container.userItemService,
+                                                         imageDownloadService: container.imageDownloadService))
     }
     
     // MARK: Body

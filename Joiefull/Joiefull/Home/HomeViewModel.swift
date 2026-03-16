@@ -1,5 +1,4 @@
 import Foundation
-import FactoryKit
 import SwiftData
 
 enum FilterMode: String, CaseIterable {
@@ -38,8 +37,8 @@ public class HomeViewModel {
     }
 
     init(
-        service: ClothesServiceProtocol = Container.shared.clothesService(),
-        userItemDataService: UserItemDataServiceProtocol = Container.shared.userItemDataService()
+        service: ClothesServiceProtocol,
+        userItemDataService: UserItemDataServiceProtocol
     ) {
         self.service = service
         self.userItemDataService = userItemDataService
