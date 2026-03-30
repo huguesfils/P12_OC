@@ -30,10 +30,8 @@ struct HomeView: View {
                 NavigationStack {
                     listContent
                         .navigationDestination(for: Item.self) { item in
-                            if let diContainer {
                                 DetailView(item: item,
                                            container: diContainer)
-                            }
                         }
                 }
                 .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .automatic))
@@ -41,10 +39,8 @@ struct HomeView: View {
                 NavigationSplitView {
                     listContent
                 } detail: {
-                    if let diContainer {
                         DetailView(item: selectedItem,
                                    container: diContainer)
-                    }
                 }
                 .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .automatic))
             }

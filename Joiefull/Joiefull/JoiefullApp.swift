@@ -10,8 +10,8 @@ struct JoiefullApp: App {
         do {
             let container = try ModelContainer(for: UserItemData.self, migrationPlan: UserItemDataMigrationPlan.self)
             modelContainer = container
-            diContainer = DIContainer(modelContainer: container)
             
+            diContainer = DIContainer(modelContainer: container)
         } catch {
             fatalError("Could not initialize ModelContainer: \(error)")
         }
