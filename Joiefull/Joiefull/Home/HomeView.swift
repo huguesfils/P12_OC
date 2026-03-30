@@ -6,9 +6,10 @@ struct HomeView: View {
     @State private var viewModel: HomeViewModel
     @State private var selectedItem: Item?
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
-    @Environment(\.diContainer) private var diContainer
     @Query(filter: #Predicate<UserItemData> { $0.isFavorite })
     private var favorites: [UserItemData]
+    
+    private let container: DIContainer
     
     private var favoriteIds: Set<Int> {
         Set(favorites.map { $0.itemId })
@@ -19,6 +20,7 @@ struct HomeView: View {
     }
     
     init(container: DIContainer) {
+        self.container = container
         _viewModel = State(initialValue: HomeViewModel(service: container.clothesService,
                                                        userItemDataService: container.userItemService))
     }
@@ -31,7 +33,7 @@ struct HomeView: View {
                     listContent
                         .navigationDestination(for: Item.self) { item in
                                 DetailView(item: item,
-                                           container: diContainer)
+                                           container: container)
                         }
                 }
                 .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .automatic))
@@ -40,7 +42,7 @@ struct HomeView: View {
                     listContent
                 } detail: {
                         DetailView(item: selectedItem,
-                                   container: diContainer)
+                                   container: container)
                 }
                 .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .automatic))
             }

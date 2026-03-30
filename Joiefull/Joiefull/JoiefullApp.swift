@@ -20,7 +20,6 @@ struct JoiefullApp: App {
     var body: some Scene {
         WindowGroup {
             HomeView(container: diContainer)
-                .environment(\.diContainer, diContainer)
         }
         .modelContainer(modelContainer)
     }
