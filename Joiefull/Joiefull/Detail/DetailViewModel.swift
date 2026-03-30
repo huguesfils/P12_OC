@@ -1,5 +1,4 @@
 import UIKit
-import FactoryKit
 
 @MainActor
 @Observable

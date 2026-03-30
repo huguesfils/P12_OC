@@ -6,11 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		65934DE12EF9AAB800997A39 /* FactoryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 65934DE02EF9AAB800997A39 /* FactoryKit */; };
-		65934DE32EF9AAB800997A39 /* FactoryTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 65934DE22EF9AAB800997A39 /* FactoryTesting */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXContainerItemProxy section */
 		652B46DC2EDF01AF00972F0A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -37,7 +32,6 @@
 		65934DE42EF9AAF800997A39 /* Exceptions for "JoiefullTests" folder in "Joiefull" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"Mocks/Container+Testing.swift",
 				Mocks/MockClothesService.swift,
 			);
 			target = 652B46CD2EDF01AD00972F0A /* Joiefull */;
@@ -45,7 +39,6 @@
 		65934DE52EF9AAF800997A39 /* Exceptions for "JoiefullTests" folder in "JoiefullTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"Mocks/Container+Testing.swift",
 				Mocks/MockClothesService.swift,
 			);
 			target = 652B46DA2EDF01AF00972F0A /* JoiefullTests */;
@@ -77,7 +70,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65934DE12EF9AAB800997A39 /* FactoryKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,7 +77,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65934DE32EF9AAB800997A39 /* FactoryTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,7 +121,6 @@
 			);
 			name = Joiefull;
 			packageProductDependencies = (
-				65934DE02EF9AAB800997A39 /* FactoryKit */,
 			);
 			productName = Joiefull;
 			productReference = 652B46CE2EDF01AD00972F0A /* Joiefull.app */;
@@ -154,7 +144,6 @@
 			);
 			name = JoiefullTests;
 			packageProductDependencies = (
-				65934DE22EF9AAB800997A39 /* FactoryTesting */,
 			);
 			productName = JoiefullTests;
 			productReference = 652B46DB2EDF01AF00972F0A /* JoiefullTests.xctest */;
@@ -189,7 +178,6 @@
 			mainGroup = 652B46C52EDF01AD00972F0A;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				65934DDF2EF9AAB800997A39 /* XCRemoteSwiftPackageReference "Factory" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 652B46CF2EDF01AD00972F0A /* Products */;
@@ -517,30 +505,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		65934DDF2EF9AAB800997A39 /* XCRemoteSwiftPackageReference "Factory" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/hmlongco/Factory";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.5.3;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		65934DE02EF9AAB800997A39 /* FactoryKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 65934DDF2EF9AAB800997A39 /* XCRemoteSwiftPackageReference "Factory" */;
-			productName = FactoryKit;
-		};
-		65934DE22EF9AAB800997A39 /* FactoryTesting */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 65934DDF2EF9AAB800997A39 /* XCRemoteSwiftPackageReference "Factory" */;
-			productName = FactoryTesting;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 652B46C62EDF01AD00972F0A /* Project object */;
 }
